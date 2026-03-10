@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+# Task Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A clean, minimal task management app built with React Native (Expo) and TypeScript, following Apple Human Interface Guidelines.
 
-## Get started
+## Screenshots
 
-1. Install dependencies
+> Run `npx expo start` and scan the QR code with Expo Go to see the app in action.
 
-   ```bash
-   npm install
-   ```
+## Setup Instructions
 
-2. Start the app
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [Expo Go](https://expo.dev/client) on your iOS or Android device **or** an iOS/Android simulator
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Running the app
 
 ```bash
-npm run reset-project
+# 1. Install dependencies
+npm install
+
+# 2. Start the dev server
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Scan the QR code with **Expo Go** (iOS/Android) or press `i` for iOS simulator / `a` for Android emulator.
 
-## Learn more
+## Project Structure
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+app/
+  _layout.tsx          # Root Stack navigator + TaskProvider wrapper
+  index.tsx            # Screen 1: Task List
+  add-task.tsx         # Screen 2: Add Task (modal sheet)
+  task/[id].tsx        # Screen 3: Task Detail / Edit
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+components/
+  TaskRow.tsx          # Animated task row with checkbox
+  FilterBar.tsx        # Segmented control (All / Active / Done)
+  EmptyState.tsx       # Context-aware empty state
+  FAB.tsx              # Floating action button
 
-## Join the community
+context/
+  TaskContext.tsx      # Global context — shares task state across all screens
 
-Join our community of developers creating universal apps.
+hooks/
+  useTasks.ts          # All business logic: CRUD, filter, AsyncStorage persistence
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+lib/
+  storage.ts           # AsyncStorage read/write helpers
+
+types/
+  task.ts              # Task and FilterType definitions
+
+constants/
+  theme.ts             # Apple HIG color tokens, typography scale, layout constants
+```
+
+## Libraries & Why
+
+| Library | Reason |
+|---------|--------|
+| `expo-router` | File-system based navigation; ships with the Expo SDK — no extra config |
+| `@react-native-async-storage/async-storage` | Simple local persistence for React Native |
+| `expo-haptics` | Native haptic feedback on task toggle & validation errors — essential for Apple feel |
+| `react-native-reanimated` | Smooth animated checkbox transitions |
+| `@expo/vector-icons` (Ionicons) | SF Symbols–adjacent icon set; works cross-platform without a custom font |
+
+No Redux, Zustand, or other state libraries were used. A single `useTasks` hook + React Context is what i used for this project.
+
+## What I Would Improve With More Time
+
+1. **Swipe-to-delete** — add `react-native-gesture-handler` swipeable rows on the list screen for faster task removal without opening the detail view.
+2. **Drag-to-reorder** — allow users to manually order tasks with a long-press drag gesture.
+3. **Due dates & reminders** — attach a due date to tasks and schedule local push notifications via `expo-notifications`.
+4. **Dark mode** — the theme already uses semantic iOS color names; wiring `useColorScheme()` to flip the palette would take minimal effort.
+5. **Accessibility** — add `accessibilityLabel`, `accessibilityHint`, and `accessibilityState` to all interactive elements for full VoiceOver / TalkBack support.
+6. **Optimistic UI + error handling** — surface AsyncStorage write failures to the user instead of silently swallowing them.
+7. **Unit tests** — add Jest + Testing Library tests for `useTasks` hook logic and the validation path in `add-task.tsx`.
