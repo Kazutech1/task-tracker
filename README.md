@@ -4,7 +4,9 @@ A clean, minimal task management app built with React Native (Expo) and TypeScri
 
 ## Screenshots
 
-> Run `npx expo start` and scan the QR code with Expo Go to see the app in action.
+![Task List](./screenshots/screenshot1.jpeg)
+![Add Task](./screenshots/screenshot2.jpeg)
+![Task Detail](./screenshots/screenshot3.jpeg)
 
 ## Setup Instructions
 
